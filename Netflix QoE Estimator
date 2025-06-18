@@ -1,0 +1,64 @@
+This tool extracts Quality of Experience (QoE) metrics from Netflix debug logs using objective video quality data like VMAF, bitrate, buffer levels, and throughput. It implements a variant of the QoE model used in SIGCOMM 2015. (https://doi.org/10.1145/2785956.2787486)
+Features
+Parses raw Netflix playback logs or debug text dumps
+
+Computes raw QoE using VMAF, bitrate variation, rebuffering, and startup delay
+
+Normalizes QoE into a 1–100 scale using a logistic sigmoid function
+
+Outputs results as a structured CSV
+Background
+Netflix does not provide direct API access to raw QoE stats. However, it does expose detailed stats in a debug overlay that includes:
+
+Video resolution and codec
+
+Bitrate and throughput
+
+Playback buffer
+
+VMAF (video quality)
+
+Dropped/corrupted frames
+
+You can extract this overlay by pressing:
+
+mathematica
+Copy
+Edit
+Control + Shift + Option + D   (Mac)
+Ctrl + Shift + Alt + D         (Windows)
+This tool is designed to process those logs.
+Input Format
+Provide a plain text file (.txt) containing one or more Netflix debug output blocks like this:
+
+txt
+Copy
+Edit
+Playing bitrate (a/v): 128 / 1961
+Playing/Buffering vmaf: 95/95
+Buffer size in Seconds (a/v): 228.695 / 229.002
+Throughput: 74882 kbps
+Total Dropped Frames: 0
+Each block should start with a line like MovieId: to mark a new session.
+
+QoE Formula
+This script uses a simplified version of the SIGCOMM 2015 model:
+
+makefile
+Copy
+Edit
+QoE_raw = VMAF 
+          - λ × quality_variation 
+          - μ × rebuffer_penalty 
+          - μs × startup_delay
+Then:
+
+ini
+Copy
+Edit
+QoE_normalized = 1 + 99 / (1 + exp(-0.01 * (QoE_raw - 500)))
+You can modify penalty weights (λ, μ, μs) as needed.
+
+Author
+Developed by Zaid Laffta and Alberto Cerpa as part of QoE analysis research. Contributions welcome!
+
