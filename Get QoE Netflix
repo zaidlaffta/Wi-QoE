@@ -1,0 +1,46 @@
+Netflix Video QoE Capture Script
+
+This Python script captures on-screen debug information (such as VMAF, bitrate, and throughput) displayed during video playback (e.g., Netflix) and logs it automatically to a text file.
+
+What It Does
+
+- Takes periodic screenshots of a defined region on your screen
+- Uses OCR (Tesseract) to extract text data (e.g., video quality metrics)
+- Filters key fields (VMAF, bitrate, buffer, dropped frames, throughput)
+- Appends them to a timestamped log file
+
+---
+
+Requirements
+
+- macOS
+- Python 3.8+
+- PyCharm IDE (or any Python environment)
+Python Packages
+
+Install with pip:
+```bash
+pip install pytesseract pillow
+Tesseract OCR
+Install Tesseract (required for OCR):
+
+brew install tesseract
+If not using Homebrew, you can download Tesseract manually from:
+https://github.com/tesseract-ocr/tesseract/wiki
+
+After install, verify it works:
+which tesseract
+Add this line to your Python script if needed:
+pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
+
+How to Use
+Open the Netflix (or any video) debug overlay on your Mac screen.
+
+
+Adjust the region variable in the script to match the coordinates where the debug text appears:
+region = (left, top, right, bottom)
+Run the script:
+python screen_qoe_capture.py
+The script will log entries every 4 seconds to:
+
+
